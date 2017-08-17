@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:elevation="12dp"
+    tools:context="com.example.gianlu.fooddiary.MainActivity">
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_width="345dp"
+        android:layout_height="400dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableRow
+        android:id="@+id/tableRow"
+        android:layout_width="150dp"
+        android:layout_height="170dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/datePicker">
+
+        <RadioGroup
+            android:id="@+id/radioGroupFoodType"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttonInsertData"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datePicker">
+
+            <RadioButton
+                android:id="@+id/radioBreakfast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Breakfast"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/radioLunch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lunch"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/radioDinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dinner"
+                android:textSize="18sp"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="325dp" />
+
+            <RadioButton
+                android:id="@+id/radioOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Other"
+                android:textSize="18sp" />
+
+        </RadioGroup>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/datePicker">
+
+        <EditText
+            android:id="@+id/editTextFoodDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/radioGroupFoodType"
+            android:layout_alignEnd="@+id/buttonResetDb"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Food"
+            android:inputType="textAutoCorrect"
+            app:layout_constraintLeft_toRightOf="@+id/radioGroupFoodType"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+
+    </TableRow>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/buttonInsertData"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Insert Data"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupFoodType" />
+
+        <Button
+            android:id="@+id/buttonViewAll"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="false"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:text="View All"
+            app:layout_constraintLeft_toRightOf="@+id/buttonInsertData"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+        <Button
+            android:id="@+id/buttonImportExportDB"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="DB Import Export" />
+
+        <Button
+            android:id="@+id/buttonResetDb"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="false"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1.56"
+            android:text="Clear DB"
+            app:layout_constraintLeft_toRightOf="@+id/buttonViewAll"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+    </LinearLayout>
+
+    <RatingBar
+        android:id="@+id/ratingBarRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tableRow"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        app:layout_constraintRight_toRightOf="parent" />
+        <!--app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />-->
+
+</RelativeLayout>
