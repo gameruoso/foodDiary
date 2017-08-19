@@ -1,6 +1,7 @@
 package com.example.gianlu.fooddiary;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +18,9 @@ import android.database.Cursor;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper app_db;
@@ -32,6 +35,28 @@ public class MainActivity extends AppCompatActivity {
     Button buttonResetDb;
     Button buttonImportExportDB;
 
+                            EditText edittext;
+                            Calendar myCalendar;
+
+                    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                              int dayOfMonth) {
+                            myCalendar.set(Calendar.YEAR, year);
+                            myCalendar.set(Calendar.MONTH, monthOfYear);
+                            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            updateLabel();
+                        }
+
+                    };
+
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         app_db = new DatabaseHelper(this);
         app_utils = new Utils();
+
 
 //        activity objects
         datePicker = (DatePicker) findViewById(R.id.datePicker);
@@ -50,11 +76,14 @@ public class MainActivity extends AppCompatActivity {
         ratingBarRating = (RatingBar)findViewById(R.id.ratingBarRating);
         radioGroupFoodType = (RadioGroup) findViewById(R.id.radioGroupFoodType);
 
+                                myCalendar = Calendar.getInstance();
+                                edittext= (EditText) findViewById(R.id.Birthday);
+
 
         // INSERT DATA BUTTON
         insertData();
         // VIEW ALL BUTTON
-        viewAllDateNew();
+        viewAllData();
         // CLEAR DB BUTTON - NORMAL CLICK (delete user data) LONG PRESS (delete file DB)
         deleteUserData();
         deleteFileDb();
@@ -62,7 +91,46 @@ public class MainActivity extends AppCompatActivity {
         exportDbFileToDownloadFoler(this);
         //IMPORT EXPORT DB BUTTON - LONG PRESS (pick a DB file from SD and overwrite app_db)
         importDbFile(this);
+
+
+
+
+
+
+                            edittext.setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            new DatePickerDialog(MainActivity.this, date, myCalendar
+                                                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                                                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                                        }
+                                    });
+
+
+
+
+
+
+
+
+
     }
+
+
+
+
+    
+                                    private void updateLabel() {
+                                        String myFormat = "dd/MM/yy"; //In which you need put here
+                                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+
+                                        edittext.setText(sdf.format(myCalendar.getTime()));
+                                    }
+
+
+
+
 
     //ACTIVITY
     //show messages
@@ -105,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
         resetRatingBar();
     }
 
+
+
+
     // INSERT DATA
     public void insertData() {
         buttonInsertData.setOnClickListener(
@@ -128,46 +199,6 @@ public class MainActivity extends AppCompatActivity {
     }
     // VIEW ALL DATA
     public void viewAllData(){
-        buttonViewAll.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Cursor res = app_db.getAllDataRaw();
-                        if (res.getCount() == 0){
-                            // show message
-                            showMessage("DB Empty", "Nothing found");
-                            return;
-                        }
-
-                        StringBuffer buffer = new StringBuffer();
-
-                        Integer dateDb;
-                        String foodDescriptionDb, foodTypeDb;
-                        Float ratingDb;
-
-                        while (res.moveToNext()) {
-                            dateDb = Integer.parseInt(res.getString(0));
-                            foodDescriptionDb = res.getString(1);
-                            foodTypeDb = res.getString(2);
-                            ratingDb = Float.parseFloat(res.getString(3));
-
-                            buffer.append(
-                                    convertDateDbEntryToPrintable(dateDb) + "           " +
-                                    foodTypeDb + "     " +
-                                    convertRatingDbEntryToPRintable(ratingDb) + "\n"
-                            );
-                            buffer.append(foodDescriptionDb + "\n\n");
-                        }
-                        // show all data
-                        showMessage("Data", buffer.toString());
-                    }
-                }
-        );
-    }
-
-
-
-    public void viewAllDateNew(){
         buttonViewAll.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -210,11 +241,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
-
-
-
-
-
     //DELETE USER DATA FROM FACT TABLE
     public void deleteUserData(){
         buttonResetDb.setOnClickListener(
