@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -22,7 +21,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper app_db;
@@ -37,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     Button buttonImportExportDB;
     Button sympAndTreatButton;
     Button setDate;
+    Button buttonEsp;
+    Button buttonCig;
     TextView textViewDate;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener dateListener;
@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         editTextFoodDescription = (EditText)findViewById(R.id.editTextFoodDescription);
         buttonInsertData = (Button)findViewById(R.id.buttonInsertData);
         buttonViewAll = (Button)findViewById(R.id.buttonViewAll);
+        buttonEsp = (Button)findViewById(R.id.buttonEsp);
+        buttonCig = (Button)findViewById(R.id.buttonCig);
         buttonResetDb = (Button)findViewById(R.id.buttonResetDb);
         buttonImportExportDB = (Button)findViewById(R.id.buttonImportExportDB);
         ratingBarRating = (RatingBar)findViewById(R.id.ratingBarRating);
@@ -73,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         setDate();
         // INSERT DATA BUTTON
         insertData();
+        // INSERT ESPRESSO BUTTON
+        insertEspresso();
+        // INSERT CIGARETTE BUTTON
+        insertCigarette();
+        insertPeppino();
         // VIEW ALL BUTTON
         viewAllData();
         // CLEAR DB BUTTON - NORMAL CLICK (delete user data) LONG PRESS (delete file DB)
@@ -178,6 +185,87 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
+    // INSERT HABIT ESPRESSO
+    public void insertEspresso(){
+        buttonEsp.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        Date now = new Date();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(now);
+                        Integer date = dayMonthYearToDateInteger(
+                                cal.get(Calendar.DAY_OF_MONTH),
+                                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                                cal.get(Calendar.YEAR)
+                        );
+                        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+                        String datetime = date_formatter.format(now);
+
+                        boolean isInserted = app_db.insertHabit(date,datetime, "espresso");
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Espresso Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Espresso Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    public void insertCigarette(){
+        buttonCig.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        Date now = new Date();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(now);
+                        Integer date = dayMonthYearToDateInteger(
+                                cal.get(Calendar.DAY_OF_MONTH),
+                                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                                cal.get(Calendar.YEAR)
+                        );
+                        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+                        String datetime = date_formatter.format(now);
+
+                        boolean isInserted = app_db.insertHabit(date,datetime, "cigarette");
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Cigarette Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Cigarette Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    public void insertPeppino(){
+        buttonCig.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        //insert into sqlite DB
+                        Date now = new Date();
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(now);
+                        Integer date = dayMonthYearToDateInteger(
+                                cal.get(Calendar.DAY_OF_MONTH),
+                                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                                cal.get(Calendar.YEAR)
+                        );
+                        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+                        String datetime = date_formatter.format(now);
+
+                        boolean isInserted = app_db.insertHabit(date,datetime, "peppino");
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Peppino :)", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Peppino Not Inserted", Toast.LENGTH_LONG).show();
+
+                        return true;
+                    }
+                }
+        );
+    }
     // VIEW ALL DATA
     public void viewAllData(){
         buttonViewAll.setOnClickListener(
@@ -228,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
-                        app_db.truncateFactTable();
+                        app_db.truncateAllFactTables();
                         Toast.makeText(MainActivity.this, "DB Cleansed", Toast.LENGTH_LONG).show();
                         resetMainActivity();
                     }

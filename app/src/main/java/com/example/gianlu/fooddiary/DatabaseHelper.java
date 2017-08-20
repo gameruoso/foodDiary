@@ -16,18 +16,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // DB VARIABLES
     public static final String DATABASE_NAME = "app_db.db";
 
-    //FACT TABLE VARIABLES
-    public static final String FACT_TABLE_NAME = "fact";
-    public static final String F_COL_ID = "ID";
-    public static final String F_COL_DATE = "DATE";
-    public static final String F_COL_FOOD = "FOOD";
-    public static final String F_COL_FOOD_TYPE = "FOOD_TYPE";
-    public static final String F_COL_RATING = "RATING";
+    //FACT TABLE FOOD VARIABLES
+    public static final String FACT_FOOD_TABLE_NAME = "fact_food";
+    public static final String F_FOOD_COL_ID = "ID";
+    public static final String F_FOOD_COL_DATE = "DATE";
+    public static final String F_FOOD_COL_FOOD = "FOOD";
+    public static final String F_FOOD_COL_FOOD_TYPE = "FOOD_TYPE";
+    public static final String F_FOOD_COL_RATING = "RATING";
 
     //DIMENSION FOOD TYPE VARIABLES
     public static final String DIM_FOOD_TYPE_TABLE_NAME = "dim_food_type";
     public static final String D_COL_FOOD_TYPE = "FOOD_TYPE";
     public static final String D_COL_FOOD_TYPE_ORDER = "FOOD_TYPE_ORDER";
+
+    //FACT TABLE HABITS VARIABLES
+    public static final String FACT_HABITS_TABLE_NAME = "fact_habits";
+    public static final String F_HABITS_COL_ID = "ID";
+    public static final String F_HABITS_COL_DATE = "DATE";
+    public static final String F_HABITS_COL_DATETIME = "DATETIME";
+    public static final String F_HABITS_COL_HABIT = "HABIT";
+
+
 
     //constructor
     public DatabaseHelper(Context context) {
@@ -36,13 +45,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create Fact Table
-        db.execSQL("CREATE TABLE " + FACT_TABLE_NAME + " (" +
-                F_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                F_COL_DATE + " INTEGER NOT NULL," +
-                F_COL_FOOD + " TEXT NOT NULL," +
-                F_COL_FOOD_TYPE + " TEXT NOT NULL," +
-                F_COL_RATING + " REAL NOT NULL" +
+        // Create Fact Table Food
+        db.execSQL("CREATE TABLE " + FACT_FOOD_TABLE_NAME + " (" +
+                F_FOOD_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                F_FOOD_COL_DATE + " INTEGER NOT NULL," +
+                F_FOOD_COL_FOOD + " TEXT NOT NULL," +
+                F_FOOD_COL_FOOD_TYPE + " TEXT NOT NULL," +
+                F_FOOD_COL_RATING + " REAL NOT NULL" +
+                ")"
+        );
+
+        // Create Fact Table Habits
+        db.execSQL("CREATE TABLE " + FACT_HABITS_TABLE_NAME + " (" +
+                F_HABITS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                F_HABITS_COL_DATE + " INTEGER NOT NULL," +
+                F_HABITS_COL_DATETIME + " TEXT NOT NULL," +
+                F_HABITS_COL_HABIT + " TEXT NOT NULL" +
                 ")"
         );
 
@@ -61,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE " + FACT_TABLE_NAME);
+        db.execSQL("DROP TABLE " + FACT_FOOD_TABLE_NAME);
         onCreate(db);
     }
 
@@ -69,12 +87,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean insertFood(Integer date, String food, String food_type, Float rating){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(F_COL_DATE, date);
-        contentValues.put(F_COL_FOOD, food);
-        contentValues.put(F_COL_FOOD_TYPE, food_type);
-        contentValues.put(F_COL_RATING, rating);
+        contentValues.put(F_FOOD_COL_DATE, date);
+        contentValues.put(F_FOOD_COL_FOOD, food);
+        contentValues.put(F_FOOD_COL_FOOD_TYPE, food_type);
+        contentValues.put(F_FOOD_COL_RATING, rating);
 
-        long result = db.insert(FACT_TABLE_NAME, null, contentValues);
+        long result = db.insert(FACT_FOOD_TABLE_NAME, null, contentValues);
 
         if (result == -1)
             return false;
@@ -83,28 +101,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
 
     }
-    public Cursor getAllDataRaw(){
+    public boolean insertHabit(Integer date, String datetime, String habit){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(F_HABITS_COL_DATE, date);
+        contentValues.put(F_HABITS_COL_DATETIME, datetime);
+        contentValues.put(F_HABITS_COL_HABIT, habit);
+
+        long result = db.insert(FACT_HABITS_TABLE_NAME, null, contentValues);
+
+        if (result == -1)
+            return false;
+        else
+            Log.d("myTag", "-------------- NEW HABIT INSERTED ------------" );
+        return true;
+    };
+    public void runSqlStatement(String sqlStatement){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT " +
-                                    "f." + F_COL_DATE + ", " +
-                                    "f." + F_COL_FOOD + ", " +
-                                    "f." + F_COL_FOOD_TYPE + ", " +
-                                    "f." + F_COL_RATING + " " +
-                                 "FROM " + FACT_TABLE_NAME + " AS f " +
-                                 "LEFT JOIN " + DIM_FOOD_TYPE_TABLE_NAME + " AS dim_ft " +
-                                    "ON f." + F_COL_FOOD_TYPE + " = dim_ft." + D_COL_FOOD_TYPE + " " +
-                                 "ORDER BY f." + F_COL_DATE + " DESC, dim_ft." + D_COL_FOOD_TYPE_ORDER + " DESC",
-
-                                null);
-        return res;
+        db.execSQL(sqlStatement);
+        this.close();
     }
-
     public Cursor getLastNDates(String n){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT DISTINCT " +
-                        F_COL_DATE + " " +
-                        "FROM " + FACT_TABLE_NAME + " " +
-                        "ORDER BY " + F_COL_DATE + " DESC LIMIT " + n,
+                        F_FOOD_COL_DATE + " " +
+                        "FROM " + FACT_FOOD_TABLE_NAME + " " +
+                        "ORDER BY " + F_FOOD_COL_DATE + " DESC LIMIT " + n,
 
                 null);
         return res;
@@ -112,12 +134,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataForASpecificDay(String day){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT " +
-                        "f." + F_COL_FOOD + ", " +
-                        "f." + F_COL_FOOD_TYPE + ", " +
-                        "f." + F_COL_RATING + " " +
-                        "FROM " + FACT_TABLE_NAME + " AS f " +
+                        "f." + F_FOOD_COL_FOOD + ", " +
+                        "f." + F_FOOD_COL_FOOD_TYPE + ", " +
+                        "f." + F_FOOD_COL_RATING + " " +
+                        "FROM " + FACT_FOOD_TABLE_NAME + " AS f " +
                         "LEFT JOIN " + DIM_FOOD_TYPE_TABLE_NAME + " AS dim_ft " +
-                        "ON f." + F_COL_FOOD_TYPE + " = dim_ft." + D_COL_FOOD_TYPE + " " +
+                        "ON f." + F_FOOD_COL_FOOD_TYPE + " = dim_ft." + D_COL_FOOD_TYPE + " " +
                         "WHERE f.DATE = " + day.toString() + " " +
                         "ORDER BY dim_ft." + D_COL_FOOD_TYPE_ORDER + " DESC",
 
@@ -125,15 +147,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public void runSqlStatement(String sqlStatement){
-        SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL(sqlStatement);
-        this.close();
-    }
 
-    public void truncateFactTable(){
+
+    public void truncateAllFactTables(){
         SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL("DELETE FROM " + FACT_TABLE_NAME + "; VACUUM;");
+        db.execSQL("DELETE FROM " + FACT_FOOD_TABLE_NAME + "; VACUUM;");
+        db.execSQL("DELETE FROM " + FACT_HABITS_TABLE_NAME + "; VACUUM;");
     }
     public void dropDb(Context context) {
         context.deleteDatabase(DATABASE_NAME);
