@@ -1,9 +1,11 @@
 package com.example.gianlu.fooddiary;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -11,13 +13,16 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.database.Cursor;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper app_db;
@@ -25,12 +30,18 @@ public class MainActivity extends AppCompatActivity {
 
     RadioGroup radioGroupFoodType;
     EditText editTextFoodDescription;
-    DatePicker datePicker;
     RatingBar ratingBarRating;
     Button buttonInsertData;
     Button buttonViewAll;
     Button buttonResetDb;
     Button buttonImportExportDB;
+    Button sympAndTreatButton;
+    Button setDate;
+    TextView textViewDate;
+    Calendar myCalendar;
+    DatePickerDialog.OnDateSetListener dateListener;
+    Date date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
         app_db = new DatabaseHelper(this);
         app_utils = new Utils();
 
+
 //        activity objects
-        datePicker = (DatePicker) findViewById(R.id.datePicker);
+        setDate = (Button) findViewById(R.id.buttonSetDate);
         editTextFoodDescription = (EditText)findViewById(R.id.editTextFoodDescription);
         buttonInsertData = (Button)findViewById(R.id.buttonInsertData);
         buttonViewAll = (Button)findViewById(R.id.buttonViewAll);
@@ -49,12 +61,20 @@ public class MainActivity extends AppCompatActivity {
         buttonImportExportDB = (Button)findViewById(R.id.buttonImportExportDB);
         ratingBarRating = (RatingBar)findViewById(R.id.ratingBarRating);
         radioGroupFoodType = (RadioGroup) findViewById(R.id.radioGroupFoodType);
+        sympAndTreatButton = (Button) findViewById(R.id.buttonSympAndTreat);
+        textViewDate = (TextView) findViewById(R.id.textViewDate);
+
+        myCalendar = Calendar.getInstance();
+        date = new Date();
 
 
+
+        // SET DATE BUTTON
+        setDate();
         // INSERT DATA BUTTON
         insertData();
         // VIEW ALL BUTTON
-        viewAllDateNew();
+        viewAllData();
         // CLEAR DB BUTTON - NORMAL CLICK (delete user data) LONG PRESS (delete file DB)
         deleteUserData();
         deleteFileDb();
@@ -62,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
         exportDbFileToDownloadFoler(this);
         //IMPORT EXPORT DB BUTTON - LONG PRESS (pick a DB file from SD and overwrite app_db)
         importDbFile(this);
+
     }
+
+
+
 
     //ACTIVITY
     //show messages
@@ -74,20 +98,12 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
     //Reset activity objects
-    private void resetDayPicker(){
-        Date today = new Date();
-        SimpleDateFormat format_year = new SimpleDateFormat("yyyy");
-        SimpleDateFormat format_month = new SimpleDateFormat("MM") ;
-        SimpleDateFormat format_day = new SimpleDateFormat("dd");
-
-        String year_str = format_year.format(today);
-        String month_str = format_month.format(today);
-        String day_str = format_day.format(today);
-        datePicker.updateDate(
-                Integer.parseInt(year_str),
-                Integer.parseInt(month_str) - 1, //JAN=0, FEB=1, ...
-                Integer.parseInt(day_str)
-        );
+    private void resetDate(){
+        date = new Date();
+        // Date format
+        String myFormat = "EEE, d MMM";
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(myFormat);
+        textViewDate.setText(dateFormatter.format(date));
     }
     private void resetFoodTypeRadioButton(){
         radioGroupFoodType.clearCheck();
@@ -99,12 +115,48 @@ public class MainActivity extends AppCompatActivity {
         ratingBarRating.setRating(0);
     }
     private void resetMainActivity(){
-        resetDayPicker();
+        resetDate();
         resetFoodTypeRadioButton();
         resetFoodTextBox();
         resetRatingBar();
     }
 
+
+
+    // SET DATE
+    public void setDate(){
+        // Date format
+        String myFormat = "EEE, d MMM";
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(myFormat);
+
+        // set today as default date
+        textViewDate.setText(dateFormatter.format(date));
+        // listen for date change
+        dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                date = myCalendar.getTime();
+                textViewDate.setText(dateFormatter.format(date));
+            }
+        };
+
+        setDate.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new DatePickerDialog(MainActivity.this, dateListener, myCalendar
+                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    }
+                });
+
+
+
+    }
     // INSERT DATA
     public void insertData() {
         buttonInsertData.setOnClickListener(
@@ -128,46 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
     // VIEW ALL DATA
     public void viewAllData(){
-        buttonViewAll.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Cursor res = app_db.getAllDataRaw();
-                        if (res.getCount() == 0){
-                            // show message
-                            showMessage("DB Empty", "Nothing found");
-                            return;
-                        }
-
-                        StringBuffer buffer = new StringBuffer();
-
-                        Integer dateDb;
-                        String foodDescriptionDb, foodTypeDb;
-                        Float ratingDb;
-
-                        while (res.moveToNext()) {
-                            dateDb = Integer.parseInt(res.getString(0));
-                            foodDescriptionDb = res.getString(1);
-                            foodTypeDb = res.getString(2);
-                            ratingDb = Float.parseFloat(res.getString(3));
-
-                            buffer.append(
-                                    convertDateDbEntryToPrintable(dateDb) + "           " +
-                                    foodTypeDb + "     " +
-                                    convertRatingDbEntryToPRintable(ratingDb) + "\n"
-                            );
-                            buffer.append(foodDescriptionDb + "\n\n");
-                        }
-                        // show all data
-                        showMessage("Data", buffer.toString());
-                    }
-                }
-        );
-    }
-
-
-
-    public void viewAllDateNew(){
         buttonViewAll.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -210,11 +222,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
-
-
-
-
-
     //DELETE USER DATA FROM FACT TABLE
     public void deleteUserData(){
         buttonResetDb.setOnClickListener(
@@ -283,23 +290,8 @@ public class MainActivity extends AppCompatActivity {
     //DATA MANIPULATION
     //Check user entries
     private boolean dateIsValid(){
-        //check date
         Date today = new Date();
-        Date pickedDate = null;
-        Integer pickedDate_int = dayMonthYearToDateInteger(
-                datePicker.getDayOfMonth(),
-                datePicker.getMonth() + 1, //JAN=1, FEB=2, ...
-                datePicker.getYear()
-        );
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-
-        try {
-            pickedDate = formatter.parse(pickedDate_int.toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if(pickedDate.after(today))
+          if(date.after(today))
             return false;
 
         return true;
@@ -321,10 +313,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     private boolean allFieldsAreValid(){
-        //date
+        //dateListener
         if (!dateIsValid()) {
             Toast.makeText(MainActivity.this, "Date must be minor or equal to today!", Toast.LENGTH_LONG).show();
-            resetDayPicker();
             return false;
         }
         //food type
@@ -389,12 +380,12 @@ public class MainActivity extends AppCompatActivity {
     }
     //Convert user entries to DB entries
     private Integer dbPickedDate() {
-        Integer pickedDate = dayMonthYearToDateInteger(
-                datePicker.getDayOfMonth(),// 1, 2, 3, ...
-                datePicker.getMonth() + 1, // JAN=0, Feb=1, ...
-                datePicker.getYear()       // 2017, 2018, ...
-        );
-        return pickedDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return dayMonthYearToDateInteger(
+                cal.get(Calendar.DAY_OF_MONTH),
+                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                cal.get(Calendar.YEAR));
     }
     private String dbFoodType(){
         //retrieve radiobutton selection
