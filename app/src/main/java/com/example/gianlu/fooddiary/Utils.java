@@ -16,6 +16,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -36,7 +39,7 @@ public class Utils {
         copyFile(currentDB, backupDB);
     }
 
-    public void importAppDbFromFile(Activity curr_activity, final Context curr_context, final String dbName) throws IOException {
+    public void importAppDbFromFile(final Activity curr_activity, final Context curr_context, final String dbName) throws IOException {
         // check system permission
         permissionCheck(curr_activity);
 
@@ -49,6 +52,8 @@ public class Utils {
             public void fileSelected(File importDbFile) {
                 Log.d(getClass().getName(), "selected file " + importDbFile.toString());
                 copyFile(importDbFile, curr_context.getDatabasePath(dbName));
+                Toast.makeText(curr_activity, "DB File imported", Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -123,4 +128,62 @@ public class Utils {
 
 
         }
+
+    public Integer getCurrentDateInteger(){
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        Integer date = dayMonthYearToDateInteger(
+                cal.get(Calendar.DAY_OF_MONTH),
+                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                cal.get(Calendar.YEAR)
+        );
+        return date;
+    }
+    public String getCurrentTimestampForSQLite(){
+        Date now = new Date();
+        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+        String datetime = date_formatter.format(now);
+        return datetime;
+    }
+    public Integer dayMonthYearToDateInteger(Integer day, Integer month, Integer year){
+        String day_str, month_str, year_str, date_str;
+
+        if (day.toString().length() == 1)
+            day_str = "0" + day.toString();
+        else
+            day_str = day.toString();
+
+        if (month.toString().length() == 1)
+            month_str = "0" + month.toString();
+        else
+            month_str = month.toString();
+
+        year_str = year.toString();
+        date_str = year_str + month_str + day_str;
+
+        return Integer.parseInt(date_str);
+    }
+    public String parseDate(Integer date_int) throws ParseException {
+        SimpleDateFormat formatter_input = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter_output = new SimpleDateFormat("EEE, d MMM");
+        Date date = formatter_input.parse(date_int.toString());
+        String date_str = formatter_output.format(date);
+        return date_str;
+    }
+    public String convertDateDbEntryToPrintable(Integer date_int){
+        String date_str = "Date Error";
+        try {
+            date_str = parseDate(date_int);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date_str;
+    }
+    public String convertRatingDbEntryToPRintable(Float rating){
+        if (rating %1 == 0)
+            return "Rating: " + rating.intValue() + "/5";
+        return "Rating: " + rating + " /5";
+    }
+
 }

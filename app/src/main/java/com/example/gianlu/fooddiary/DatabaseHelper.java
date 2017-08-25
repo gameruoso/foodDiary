@@ -36,6 +36,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String F_HABITS_COL_DATETIME = "DATETIME";
     public static final String F_HABITS_COL_HABIT = "HABIT";
 
+    //FACT TABLE SYMPTOMS VARIABLES
+    public static final String FACT_SYMPTOMS_TABLE_NAME = "fact_symptoms";
+    public static final String F_SYMPTOMS_COL_ID = "ID";
+    public static final String F_SYMPTOMS_COL_DATE = "DATE";
+    public static final String F_SYMPTOMS_COL_DATETIME = "DATETIME";
+    public static final String F_SYMPTOMS_COL_SYMPTOM = "SYMPTOM";
+    public static final String F_SYMPTOMS_COL_VALUE = "VALUE_1_TO_3";
+
+    //FACT TABLE TREATMENTS VARIABLES
+    public static final String FACT_TREATMENTS_TABLE_NAME = "fact_treatments";
+    public static final String F_TREATMENTS_COL_ID = "ID";
+    public static final String F_TREATMENTS_COL_DATE = "DATE";
+    public static final String F_TREATMENTS_COL_DATETIME = "DATETIME";
+    public static final String F_TREATMENTS_COL_TREATMENT = "TREATMENT";
+    public static final String F_TREATMENTS_COL_VALUE = "VALUE_MG_ML";
+
 
 
     //constructor
@@ -64,6 +80,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ")"
         );
 
+        // Create Fact Table Symptoms
+        db.execSQL("CREATE TABLE " + FACT_SYMPTOMS_TABLE_NAME + " (" +
+                F_SYMPTOMS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                F_SYMPTOMS_COL_DATE + " INTEGER NOT NULL," +
+                F_SYMPTOMS_COL_DATETIME + " TEXT NOT NULL," +
+                F_SYMPTOMS_COL_SYMPTOM + " TEXT NOT NULL," +
+                F_SYMPTOMS_COL_VALUE + " INTEGER NOT NULL" +
+                ")"
+        );
+
+        // Create Fact Table Treatments
+        db.execSQL("CREATE TABLE " + FACT_TREATMENTS_TABLE_NAME + " (" +
+                F_TREATMENTS_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                F_TREATMENTS_COL_DATE + " INTEGER NOT NULL," +
+                F_TREATMENTS_COL_DATETIME + " TEXT NOT NULL," +
+                F_TREATMENTS_COL_TREATMENT + " TEXT NOT NULL," +
+                F_TREATMENTS_COL_VALUE + " INTEGER NOT NULL" +
+                ")"
+        );
+
         // Create Dimension Food Type
         db.execSQL("CREATE TABLE " + DIM_FOOD_TYPE_TABLE_NAME + " (" +
                 D_COL_FOOD_TYPE + " TEXT NOT NULL," +
@@ -83,7 +119,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
     public boolean insertFood(Integer date, String food, String food_type, Float rating){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -99,7 +134,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             Log.d("myTag", "-------------- NEW RECORD INSERTED ------------" );
         return true;
-
     }
     public boolean insertHabit(Integer date, String datetime, String habit){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -116,6 +150,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.d("myTag", "-------------- NEW HABIT INSERTED ------------" );
         return true;
     };
+    public boolean insertSymptom(Integer date, String datetime, String symptom, Integer value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(F_SYMPTOMS_COL_DATE, date);
+        contentValues.put(F_SYMPTOMS_COL_DATETIME, datetime);
+        contentValues.put(F_SYMPTOMS_COL_SYMPTOM, symptom);
+        contentValues.put(F_SYMPTOMS_COL_VALUE, value);
+
+        long result = db.insert(FACT_SYMPTOMS_TABLE_NAME, null, contentValues);
+
+        if (result == -1)
+            return false;
+        else
+            Log.d("myTag", "-------------- NEW SYMPTOM INSERTED ------------" );
+        return true;
+    }
+    public boolean insertTreatment(Integer date, String datetime, String tretment, Integer value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(F_TREATMENTS_COL_DATE, date);
+        contentValues.put(F_TREATMENTS_COL_DATETIME, datetime);
+        contentValues.put(F_TREATMENTS_COL_TREATMENT, tretment);
+        contentValues.put(F_TREATMENTS_COL_VALUE, value);
+
+        long result = db.insert(FACT_TREATMENTS_TABLE_NAME, null, contentValues);
+
+        if (result == -1)
+            return false;
+        else
+            Log.d("myTag", "-------------- NEW TREATMENT INSERTED ------------" );
+        return true;
+    }
     public void runSqlStatement(String sqlStatement){
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(sqlStatement);
