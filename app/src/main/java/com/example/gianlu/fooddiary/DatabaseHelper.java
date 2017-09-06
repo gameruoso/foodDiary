@@ -187,6 +187,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sqlStatement);
         this.close();
     }
+    public Cursor runSqlQuery(String query){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(query, null);
+        return res;
+    }
     public Cursor getLastNDates(String n){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT DISTINCT " +
@@ -219,6 +224,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL("DELETE FROM " + FACT_FOOD_TABLE_NAME + "; VACUUM;");
         db.execSQL("DELETE FROM " + FACT_HABITS_TABLE_NAME + "; VACUUM;");
+        db.execSQL("DELETE FROM " + FACT_SYMPTOMS_TABLE_NAME + "; VACUUM;");
+        db.execSQL("DELETE FROM " + FACT_TREATMENTS_TABLE_NAME + "; VACUUM;");
     }
     public void dropDb(Context context) {
         context.deleteDatabase(DATABASE_NAME);

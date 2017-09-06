@@ -197,27 +197,27 @@
 
     <Button
         android:id="@+id/buttonInsertData"
-        android:layout_width="120dp"
+        android:layout_width="80dp"
         android:layout_height="70dp"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="Insert Data"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/buttonViewAll"
-        android:layout_width="120dp"
+        android:layout_width="80dp"
         android:layout_height="70dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
         android:text="View Data"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/buttonInsertData"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintLeft_toRightOf="@+id/buttonInsertData" />
 
         <TextView
             android:id="@+id/textViewFood"
@@ -268,6 +268,16 @@
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/buttonStats"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="24dp"
+        android:text="STATS"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/buttonViewAll" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.icu.math.BigDecimal;
 import android.icu.text.DateFormat;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import static java.lang.System.exit;
 
 /**
  * Created by gianlu on 13/08/2017.
@@ -129,6 +132,16 @@ public class Utils {
 
         }
 
+    public String getCurrentTimestampForSQLite(){
+        Date now = new Date();
+        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
+        String datetime = date_formatter.format(now);
+        return datetime;
+    }
+
+    public float roundFloatToDecimals(float d, int decimalPlace) {
+        return BigDecimal.valueOf(d).setScale(decimalPlace, BigDecimal.ROUND_HALF_UP).floatValue();
+    }
     public Integer getCurrentDateInteger(){
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
@@ -140,11 +153,45 @@ public class Utils {
         );
         return date;
     }
-    public String getCurrentTimestampForSQLite(){
+    public Integer getNDaysAgoDateInteger(Integer numberOfDaysAgo){
+        Date nDaysAgoDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nDaysAgoDate);
+        cal.add(Calendar.DATE, -1*numberOfDaysAgo);
+
+        Integer nDaysAgoDateInteger = dayMonthYearToDateInteger(
+                cal.get(Calendar.DAY_OF_MONTH),
+                cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                cal.get(Calendar.YEAR)
+        );
+        return nDaysAgoDateInteger;
+    }
+    public Number[] getLastNDays(Integer dayWindow, String dateOrDay){
+        Number[] lastNDaysList = new Number[dayWindow];
         Date now = new Date();
-        SimpleDateFormat date_formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
-        String datetime = date_formatter.format(now);
-        return datetime;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        // set first day
+        cal.add(Calendar.DATE, -1*dayWindow);
+
+        for (int i = 0; i < dayWindow; i++){
+
+            if (dateOrDay.equals("date"))
+                lastNDaysList[i] = dayMonthYearToDateInteger(
+                        cal.get(Calendar.DAY_OF_MONTH),
+                        cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
+                        cal.get(Calendar.YEAR)
+                );
+            else if (dateOrDay.equals("day"))
+                lastNDaysList[i] = cal.get(Calendar.DAY_OF_MONTH);
+            else
+                exit(1);
+
+            cal.add(Calendar.DATE, 1);
+
+        }
+        return lastNDaysList;
     }
     public Integer dayMonthYearToDateInteger(Integer day, Integer month, Integer year){
         String day_str, month_str, year_str, date_str;

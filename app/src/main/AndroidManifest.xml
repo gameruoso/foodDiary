@@ -27,8 +27,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+
             <intent-filter>
                 <action android:name="com.example.gianlu.fooddiary.SymptomsAndTreatmentsActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Stats"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+            <intent-filter>
+                <action android:name="com.example.gianlu.fooddiary.Stats" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

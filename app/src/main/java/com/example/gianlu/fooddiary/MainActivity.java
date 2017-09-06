@@ -18,7 +18,6 @@ import android.widget.Toast;
 import android.database.Cursor;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,9 +31,10 @@ public class MainActivity extends AppCompatActivity {
     RatingBar ratingBarRating;
     Button buttonInsertData;
     Button buttonViewAll;
+    Button buttonStats;
     Button buttonResetDb;
     Button buttonImportExportDB;
-    Button sympAndTreatButton;
+    Button buttonSympAndTreat;
     Button setDate;
     Button buttonEspresso;
     Button buttonCigarette;
@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         editTextFoodDescription = (EditText)findViewById(R.id.editTextFoodDescription);
         buttonInsertData = (Button)findViewById(R.id.buttonInsertData);
         buttonViewAll = (Button)findViewById(R.id.buttonViewAll);
+        buttonStats = (Button)findViewById(R.id.buttonStats);
+        buttonSympAndTreat = (Button) findViewById(R.id.buttonSympAndTreat);
         buttonEspresso = (Button)findViewById(R.id.buttonEspresso);
         buttonCigarette = (Button)findViewById(R.id.buttonCigarette);
         buttonSoftDrink = (Button)findViewById(R.id.buttonSoftDrink);
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         buttonImportExportDB = (Button)findViewById(R.id.buttonImportExportDB);
         ratingBarRating = (RatingBar)findViewById(R.id.ratingBarRating);
         radioGroupFoodType = (RadioGroup) findViewById(R.id.radioGroupFoodType);
-        sympAndTreatButton = (Button) findViewById(R.id.buttonSympAndTreat);
         textViewDate = (TextView) findViewById(R.id.textViewDate);
 
         myCalendar = Calendar.getInstance();
@@ -89,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         insertDrink();
         // SET SYMPTOMS AND TREATMENTS
         setSymptomsAndTreatments();
+        // ViEW STATS
+        viewStats();
         // VIEW ALL BUTTON
         viewAllData();
         // CLEAR DB BUTTON - NORMAL CLICK (delete user data) LONG PRESS (delete file DB)
@@ -294,11 +297,23 @@ public class MainActivity extends AppCompatActivity {
     }
     // SYMPTOMS AND TREATMENTS
     public void setSymptomsAndTreatments(){
-        sympAndTreatButton.setOnClickListener(
+        buttonSympAndTreat.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent("com.example.gianlu.fooddiary.SymptomsAndTreatmentsActivity");
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
+    // STATS
+    public void viewStats(){
+        buttonStats.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent("com.example.gianlu.fooddiary.Stats");
                         startActivity(intent);
                     }
                 }
@@ -317,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                         String foodDescriptionDb, foodTypeDb;
                         Float ratingDb;
 
-                        Cursor res_dates = app_db.getLastNDates("31");
+                        Cursor res_dates = app_db.getLastNDates("30");
                         if (res_dates.getCount() == 0){
                             // show message
                             showMessage("DB Empty", "Nothing found");

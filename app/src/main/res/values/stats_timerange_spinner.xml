@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinnerStatsTimerangeArray">
+        <item>Last week</item>
+        <item>Last 2 weeks</item>
+        <item>Last 3 weeks</item>
+        <item>Last month</item>
+        <item>Last 2 months</item>
+        <item>Last 3 months</item>
+        <item>Last 6 months</item>
+        <item>Last year</item>
+    </string-array>
+</resources>
