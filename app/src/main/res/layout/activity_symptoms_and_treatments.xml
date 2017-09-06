@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.gianlu.fooddiary.SymptomsAndTreatmentsActivity">
+
+    <Button
+        android:id="@+id/buttonCancelSympAndTreat"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="32dp"
+        android:text="Cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/buttonSaveSympAndTreat"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" />
+
+    <Button
+        android:id="@+id/buttonSaveSympAndTreat"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="32dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <SeekBar
+        android:id="@+id/seekBarBelly"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:max="3"
+        android:progress="0"
+        app:layout_constraintLeft_toRightOf="@+id/textViewBellyLabel"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarStomach" />
+
+    <SeekBar
+        android:id="@+id/seekBarStomach"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:max="3"
+        android:progress="0"
+        app:layout_constraintLeft_toRightOf="@+id/textViewStomachLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSymptomsTitle" />
+
+    <SeekBar
+        android:id="@+id/seekBarAntacid"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:max="2"
+        android:progress="0"
+        app:layout_constraintLeft_toRightOf="@+id/textViewAntacidLabel"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTreatmentsTitle" />
+
+    <SeekBar
+        android:id="@+id/seekBarPPI"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="170dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:max="2"
+        android:progress="0"
+        app:layout_constraintLeft_toRightOf="@+id/textViewPPILabel"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarAntacid" />
+
+    <TextView
+        android:id="@+id/textViewBellyLabel"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Belly"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStomachLabel" />
+
+    <TextView
+        android:id="@+id/textViewStomachLabel"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Stomach"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSymptomsTitle" />
+
+    <TextView
+        android:id="@+id/textViewPPILabel"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="PPI"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAntacidLabel" />
+
+    <TextView
+        android:id="@+id/textViewAntacidLabel"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Antacid"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTreatmentsTitle" />
+
+    <TextView
+        android:id="@+id/textViewSymptomsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Symptoms"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/textViewTreatmentsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="270dp"
+        android:text="Treatments"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewAntacidValue"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="mg"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@+id/seekBarAntacid"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTreatmentsTitle" />
+
+    <TextView
+        android:id="@+id/textViewPPIValue"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="mg"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@+id/seekBarPPI"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAntacidValue" />
+
+    <ImageView
+        android:id="@+id/imageViewStomach"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintLeft_toRightOf="@+id/seekBarStomach"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSymptomsTitle" />
+
+    <ImageView
+        android:id="@+id/imageViewBelly"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toRightOf="@+id/seekBarBelly"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewStomach"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+</android.support.constraint.ConstraintLayout>

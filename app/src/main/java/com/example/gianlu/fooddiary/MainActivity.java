@@ -2,10 +2,10 @@ package com.example.gianlu.fooddiary;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -18,11 +18,9 @@ import android.widget.Toast;
 import android.database.Cursor;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     DatabaseHelper app_db;
@@ -33,10 +31,15 @@ public class MainActivity extends AppCompatActivity {
     RatingBar ratingBarRating;
     Button buttonInsertData;
     Button buttonViewAll;
+    Button buttonStats;
     Button buttonResetDb;
     Button buttonImportExportDB;
-    Button sympAndTreatButton;
+    Button buttonSympAndTreat;
     Button setDate;
+    Button buttonEspresso;
+    Button buttonCigarette;
+    Button buttonSoftDrink;
+    Button buttonDrink;
     TextView textViewDate;
     Calendar myCalendar;
     DatePickerDialog.OnDateSetListener dateListener;
@@ -53,15 +56,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 //        activity objects
-        setDate = (Button) findViewById(R.id.buttonSetDate);
+        setDate = (Button)findViewById(R.id.buttonSetDate);
         editTextFoodDescription = (EditText)findViewById(R.id.editTextFoodDescription);
         buttonInsertData = (Button)findViewById(R.id.buttonInsertData);
         buttonViewAll = (Button)findViewById(R.id.buttonViewAll);
+        buttonStats = (Button)findViewById(R.id.buttonStats);
+        buttonSympAndTreat = (Button) findViewById(R.id.buttonSympAndTreat);
+        buttonEspresso = (Button)findViewById(R.id.buttonEspresso);
+        buttonCigarette = (Button)findViewById(R.id.buttonCigarette);
+        buttonSoftDrink = (Button)findViewById(R.id.buttonSoftDrink);
+        buttonDrink = (Button)findViewById(R.id.buttonDrink);
         buttonResetDb = (Button)findViewById(R.id.buttonResetDb);
         buttonImportExportDB = (Button)findViewById(R.id.buttonImportExportDB);
         ratingBarRating = (RatingBar)findViewById(R.id.ratingBarRating);
         radioGroupFoodType = (RadioGroup) findViewById(R.id.radioGroupFoodType);
-        sympAndTreatButton = (Button) findViewById(R.id.buttonSympAndTreat);
         textViewDate = (TextView) findViewById(R.id.textViewDate);
 
         myCalendar = Calendar.getInstance();
@@ -73,6 +81,17 @@ public class MainActivity extends AppCompatActivity {
         setDate();
         // INSERT DATA BUTTON
         insertData();
+        // INSERT ESPRESSO BUTTON
+        insertEspresso();
+        // INSERT CIGARETTE BUTTON
+        insertCigarette();
+        insertPeppino();
+        insertSoftDrink();
+        insertDrink();
+        // SET SYMPTOMS AND TREATMENTS
+        setSymptomsAndTreatments();
+        // ViEW STATS
+        viewStats();
         // VIEW ALL BUTTON
         viewAllData();
         // CLEAR DB BUTTON - NORMAL CLICK (delete user data) LONG PRESS (delete file DB)
@@ -178,6 +197,128 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
     }
+    // INSERT HABITS
+    public void insertEspresso(){
+        buttonEspresso.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        boolean isInserted = app_db.insertHabit(
+                                app_utils.getCurrentDateInteger(),
+                                app_utils.getCurrentTimestampForSQLite(),
+                                "espresso"
+                        );
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Espresso Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Espresso Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    public void insertCigarette(){
+        buttonCigarette.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        boolean isInserted = app_db.insertHabit(
+                                app_utils.getCurrentDateInteger(),
+                                app_utils.getCurrentTimestampForSQLite(),
+                                "cigarette"
+                        );
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Cigarette Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Cigarette Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    public void insertPeppino(){
+        buttonCigarette.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        //insert into sqlite DB
+                        boolean isInserted = app_db.insertHabit(
+                                app_utils.getCurrentDateInteger(),
+                                app_utils.getCurrentTimestampForSQLite(),
+                                "peppino"
+                        );
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Peppino :)", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Peppino Not Inserted", Toast.LENGTH_LONG).show();
+
+                        return true;
+                    }
+                }
+        );
+    }
+    public void insertSoftDrink(){
+        buttonSoftDrink.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        boolean isInserted = app_db.insertHabit(
+                                app_utils.getCurrentDateInteger(),
+                                app_utils.getCurrentTimestampForSQLite(),
+                                "soft_drink"
+                        );
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Soft Drink Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Soft Drink Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    public void insertDrink(){
+        buttonDrink.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //insert into sqlite DB
+                        boolean isInserted = app_db.insertHabit(
+                                app_utils.getCurrentDateInteger(),
+                                app_utils.getCurrentTimestampForSQLite(),
+                                "drink"
+                        );
+                        if (isInserted)
+                            Toast.makeText(MainActivity.this, "Drink Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Drink Not Inserted", Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+    }
+    // SYMPTOMS AND TREATMENTS
+    public void setSymptomsAndTreatments(){
+        buttonSympAndTreat.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent("com.example.gianlu.fooddiary.SymptomsAndTreatmentsActivity");
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
+    // STATS
+    public void viewStats(){
+        buttonStats.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent("com.example.gianlu.fooddiary.Stats");
+                        startActivity(intent);
+                    }
+                }
+        );
+    }
     // VIEW ALL DATA
     public void viewAllData(){
         buttonViewAll.setOnClickListener(
@@ -191,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                         String foodDescriptionDb, foodTypeDb;
                         Float ratingDb;
 
-                        Cursor res_dates = app_db.getLastNDates("31");
+                        Cursor res_dates = app_db.getLastNDates("30");
                         if (res_dates.getCount() == 0){
                             // show message
                             showMessage("DB Empty", "Nothing found");
@@ -200,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
 
                         while (res_dates.moveToNext()) {
                             dateDb = Integer.parseInt(res_dates.getString(0));
-                            buffer.append("*************  " + convertDateDbEntryToPrintable(dateDb) + "  *************\n");
+                            buffer.append("*************  " + app_utils.convertDateDbEntryToPrintable(dateDb) + "  *************\n");
 
                             Cursor res_data_for_a_day = app_db.getAllDataForASpecificDay(res_dates.getString(0));
 
@@ -210,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                                 foodTypeDb = res_data_for_a_day.getString(1);
                                 ratingDb = Float.parseFloat(res_data_for_a_day.getString(2));
 
-                                buffer.append("-- " + foodTypeDb + " ---- (" + convertRatingDbEntryToPRintable(ratingDb) + ") ---------------\n");
+                                buffer.append("-- " + foodTypeDb + " ---- (" + app_utils.convertRatingDbEntryToPRintable(ratingDb) + ") ---------------\n");
                                 buffer.append( foodDescriptionDb + "\n");
                             }
                             buffer.append( "*****************************************\n\n");
@@ -228,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener(){
                     @Override
                     public void onClick(View view) {
-                        app_db.truncateFactTable();
+                        app_db.truncateAllFactTables();
                         Toast.makeText(MainActivity.this, "DB Cleansed", Toast.LENGTH_LONG).show();
                         resetMainActivity();
                     }
@@ -275,7 +416,6 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onLongClick(View view) {
                         try {
                             app_utils.importAppDbFromFile(curr_activity, getApplicationContext(), app_db.getDatabaseName());
-                            Toast.makeText(MainActivity.this, "DB File imported", Toast.LENGTH_LONG).show();
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Error importing DB", Toast.LENGTH_LONG).show();
@@ -287,7 +427,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //DATA MANIPULATION
     //Check user entries
     private boolean dateIsValid(){
         Date today = new Date();
@@ -338,51 +477,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-    //Parse data
-    private Integer dayMonthYearToDateInteger(Integer day, Integer month, Integer year){
-        String day_str, month_str, year_str, date_str;
 
-        if (day.toString().length() == 1)
-            day_str = "0" + day.toString();
-        else
-            day_str = day.toString();
-
-        if (month.toString().length() == 1)
-            month_str = "0" + month.toString();
-        else
-            month_str = month.toString();
-
-        year_str = year.toString();
-        date_str = year_str + month_str + day_str;
-
-        return Integer.parseInt(date_str);
-    }
-    private String parseDate(Integer date_int) throws ParseException{
-        SimpleDateFormat formatter_input = new SimpleDateFormat("yyyyMMdd");
-        SimpleDateFormat formatter_output = new SimpleDateFormat("EEE, d MMM");
-        Date date = formatter_input.parse(date_int.toString());
-        String date_str = formatter_output.format(date);
-        return date_str;
-    }
-    private String convertDateDbEntryToPrintable(Integer date_int){
-        String date_str = "Date Error";
-        try {
-            date_str = parseDate(date_int);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date_str;
-    }
-    private String convertRatingDbEntryToPRintable(Float rating){
-        if (rating %1 == 0)
-            return "Rating: " + rating.intValue() + "/5";
-        return "Rating: " + rating + " /5";
-    }
     //Convert user entries to DB entries
     private Integer dbPickedDate() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return dayMonthYearToDateInteger(
+        return app_utils.dayMonthYearToDateInteger(
                 cal.get(Calendar.DAY_OF_MONTH),
                 cal.get(Calendar.MONTH) + 1, //Jan=0, Feb=1, etc
                 cal.get(Calendar.YEAR));
